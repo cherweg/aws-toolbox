@@ -34,7 +34,7 @@ esac
 done
 
 set -- "${POSITIONAL[@]}" # restore positional parameters
-([ -n "$DOMAIN" ]  &&  [ -n "$NAME_TAG" ]) &&  [ -n "$ZONE_TYPE" ]) || {
+([ -n "$DOMAIN" ]  &&  [ -n "$NAME_TAG" ] &&  [ -n "$ZONE_TYPE" ]) || {
   echo >&2 "Usage: $0 -d <domain> -z <zone-type> -t <name-tag> -a <auto-scaling-group>"
   exit 2
 }
