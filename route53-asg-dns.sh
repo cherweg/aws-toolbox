@@ -91,9 +91,9 @@ if [ -z "$GROUP" ]; then
 fi
 gen_json "$GROUP" > /tmp/${GROUP}.json
 if [ "$ZONE_TYPE" == "PUBLIC" ]; then 
-  ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name ${DOMAIN} --region eu-central-1 --max-items 1 --query 'HostedZones[?Config.PrivateZone == `false` ].Id' --output text)
+  ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name ${DOMAIN} --region eu-central-1 --query 'HostedZones[?Config.PrivateZone == `false` ].Id' --output text)
 elif [ "$ZONE_TYPE" == "PRIVATE" ]; then
-  ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name ${DOMAIN} --region eu-central-1 --max-items 1 --query 'HostedZones[?Config.PrivateZone == `true` ].Id' --output text)
+  ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name ${DOMAIN} --region eu-central-1 --query 'HostedZones[?Config.PrivateZone == `true` ].Id' --output text)
 else
   echo >&2 "ZONE_TYPE must be PUBLIC||PRIVATE"
   exit 3
