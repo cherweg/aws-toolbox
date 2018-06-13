@@ -46,8 +46,29 @@ asg_ips () {
                         --region eu-central-1 \
                         --query 'AutoScalingGroups[*].Instances[*].[InstanceId]' --output text)"
 
-    aws ec2 describe-instances --instance-ids $instance_ids --region eu-central-1 \
-        --query 'Reservations[*].Instances[*].[PrivateIpAddress]' --output text
+    local private_ips=($(aws ec2 describe-instances --instance-ids $instance_ids --region eu-central-1 \
+        --query 'Reservations[*].Instances[*].[PrivateIpAddress]' --output text))
+    
+    for ip in "${private_ips[@]}"
+	do
+	  if valid_ip $ip; then echo "xx${ip}";fi
+    	done
+}
+
+valid_ip() {
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
 }
 
 gen_json () {
